@@ -112,6 +112,7 @@ class _WoodenFishScreenState extends State<WoodenFishScreen>
       }
       _sound.init();
       _sound.startBGM();
+      _updatePlaybackRate(_autoKnockSpeed);
     });
   }
 
@@ -198,9 +199,32 @@ class _WoodenFishScreenState extends State<WoodenFishScreen>
     }
   }
 
+  void _updatePlaybackRate(int speed) {
+    double rate;
+    switch (speed) {
+      case 1000:
+        rate = 0.7;
+        break;
+      case 500:
+        rate = 1.0;
+        break;
+      case 300:
+        rate = 1.4;
+        break;
+      case 150:
+        rate = 1.8;
+        break;
+      default:
+        rate = 1.0;
+    }
+    _sound.setKnockPlaybackRate(rate);
+    _sound.setBGMPlaybackRate(rate);
+  }
+
   void _setAutoKnockSpeed(int speed) {
     setState(() {
       _autoKnockSpeed = speed;
+      _updatePlaybackRate(speed);
       if (_isAutoKnocking) {
         _autoKnockTimer?.cancel();
         _autoKnockTimer = Timer.periodic(

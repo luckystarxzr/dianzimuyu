@@ -10,6 +10,8 @@ class SoundManager {
   bool soundEnabled = true;
   bool bgmEnabled = true;
   int vibrationLevel = 2;
+  double _knockPlaybackRate = 1.0;
+  double _bgmPlaybackRate = 1.0;
 
   final AudioPlayer _knockPlayer = AudioPlayer();
   final AudioPlayer _effectPlayer = AudioPlayer();
@@ -22,6 +24,7 @@ class SoundManager {
     try {
       await _knockPlayer.setSource(AssetSource('sounds/wood_knock.wav'));
       await _knockPlayer.setVolume(0.8);
+      await _knockPlayer.setPlaybackRate(_knockPlaybackRate);
 
       await _effectPlayer.setSource(AssetSource('sounds/wood_knock.wav'));
       await _effectPlayer.setVolume(0.8);
@@ -29,6 +32,7 @@ class SoundManager {
       await _bgmPlayer.setSource(AssetSource('sounds/muyu.mp3'));
       await _bgmPlayer.setVolume(0.4);
       await _bgmPlayer.setReleaseMode(ReleaseMode.loop);
+      await _bgmPlayer.setPlaybackRate(_bgmPlaybackRate);
     } catch (_) {}
   }
 
@@ -43,6 +47,21 @@ class SoundManager {
   Future<void> pauseBGM() async {
     try {
       await _bgmPlayer.pause();
+    } catch (_) {}
+  }
+
+  Future<void> setKnockPlaybackRate(double rate) async {
+    _knockPlaybackRate = rate.clamp(0.5, 2.0);
+    try {
+      await _knockPlayer.setPlaybackRate(_knockPlaybackRate);
+    } catch (_) {}
+  }
+
+  Future<void> setBGMPlaybackRate(double rate) async {
+    _bgmPlaybackRate = rate.clamp(0.5, 2.0);
+    try {
+      await init();
+      await _bgmPlayer.setPlaybackRate(_bgmPlaybackRate);
     } catch (_) {}
   }
 
