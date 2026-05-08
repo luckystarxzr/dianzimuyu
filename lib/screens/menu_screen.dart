@@ -99,18 +99,30 @@ class _MenuScreenState extends State<MenuScreen>
       PageRouteBuilder(
         pageBuilder: (_, __, ___) => const WoodenFishScreen(),
         transitionsBuilder: (_, anim, __, child) {
-          return SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0, 1),
-              end: Offset.zero,
-            ).animate(CurvedAnimation(
-              parent: anim,
-              curve: Curves.easeOutCubic,
-            )),
-            child: child,
+          return FadeTransition(
+            opacity: anim,
+            child: ScaleTransition(
+              scale: Tween<double>(
+                begin: 0.9,
+                end: 1.0,
+              ).animate(CurvedAnimation(
+                parent: anim,
+                curve: Curves.easeOutBack,
+              )),
+              child: SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, 0.1),
+                  end: Offset.zero,
+                ).animate(CurvedAnimation(
+                  parent: anim,
+                  curve: Curves.easeOutCubic,
+                )),
+                child: child,
+              ),
+            ),
           );
         },
-        transitionDuration: const Duration(milliseconds: 500),
+        transitionDuration: const Duration(milliseconds: 600),
       ),
     );
   }
